@@ -12,7 +12,8 @@ def main():
         "Nivel 2: Grupos de Anuncios",
         "Nivel 3: Anuncios",
         "Nivel 4: UTMs",
-        "Exportar Nomenclaturas"
+        "Exportar Nomenclaturas",
+        "Acerca de"
     ])
 
     # Lógica para cada paso según la selección
@@ -43,6 +44,8 @@ def main():
             st.session_state.get("ad_nomenclature", ""),
             st.session_state.get("utm_nomenclature", "")
         )
+    elif paso == "Acerca de":
+        acerca_de()
 
 
 def pantalla_inicio():
@@ -329,6 +332,25 @@ def exportar_nomenclaturas(campaign_nomenclature, group_nomenclature, ad_nomencl
             file_name="nomenclaturas.xlsx",
             mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
         )
+
+def acerca_de():
+    st.title("Acerca de")
+    st.write("""
+    **¡Bienvenido a la sección Acerca de!**
+
+    Soy Jordi Quiroga, un profesional apasionado del marketing digital y la ciencia de datos. Con años de experiencia en la industria del marketing, he trabajado con agencias y marcas para optimizar sus estrategias publicitarias a través del poder de los datos.
+
+    Esta aplicación fue creada con el objetivo de ayudar a los profesionales del marketing a estructurar mejor sus campañas y aprovechar al máximo los recursos publicitarios.
+    Mi enfoque siempre ha sido hacer accesible y comprensible la información, utilizando herramientas tecnológicas para transformar datos dispersos en insights accionables.
+    
+    Me encanta la tecnología, el aprendizaje automático y explorar nuevas formas de hacer que el marketing basado en datos sea más eficiente y fácil para todos.
+
+    Si deseas saber más sobre mi trabajo, o quieres que personalice esta aplicación para ti, ¡no dudes en ponerte en contacto!
+                 
+    """)
+    st.write("**Correo electrónico:** ads@jordiquiroga.com")
+    st.write("**Perfil de LinkedIn:** [Jordi Quiroga Fernández](https://www.linkedin.com/in/jordiquirogafernandez/)")
+    st.image("images/jordi-portrait.jpg", caption="Jordi Quiroga", width=200)
 
 
 if __name__ == "__main__":
