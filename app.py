@@ -1,7 +1,6 @@
 import streamlit as st
 import pandas as pd
 from io import BytesIO
-import pyperclip
 
 
 def main():
@@ -113,11 +112,22 @@ def nivel_campanas():
 
     st.write("Nomenclatura de Campaña generada:", campaign_nomenclature)
 
-    # Botón para copiar nomenclatura
-    st.markdown(f"""
-        <button onclick="navigator.clipboard.writeText('{campaign_nomenclature}')">Copiar Nomenclatura de Campaña</button>
-        """, unsafe_allow_html=True)
-    
+    # Botón de copiar usando HTML y JavaScript
+    copy_button_code = f"""
+        <button onclick="copyToClipboard()">Copiar Nomenclatura de Campaña</button>
+        <script>
+            function copyToClipboard() {{
+                var text = `{campaign_nomenclature}`;
+                navigator.clipboard.writeText(text).then(function() {{
+                    alert('Copiado al portapapeles');
+                }}, function(err) {{
+                    console.error('Error al copiar: ', err);
+                }});
+            }}
+        </script>
+    """
+    st.components.v1.html(copy_button_code)
+
     return campaign_nomenclature
 
 
@@ -161,10 +171,21 @@ def nivel_grupos_anuncios():
 
     st.write("Nomenclatura de Grupo de Anuncios generada:", group_nomenclature)
 
-    # Botón para copiar nomenclatura
-    if st.button("Copiar Nomenclatura de Grupo de Anuncios"):
-        pyperclip.copy(group_nomenclature)
-        st.success("Nomenclatura de Grupo de Anuncios copiada al portapapeles.")
+    # Botón de copiar usando HTML y JavaScript
+    copy_button_code = f"""
+        <button onclick="copyToClipboard()">Copiar Nomenclatura de Grupo de Anuncios</button>
+        <script>
+            function copyToClipboard() {{
+                var text = `{group_nomenclature}`;
+                navigator.clipboard.writeText(text).then(function() {{
+                    alert('Copiado al portapapeles');
+                }}, function(err) {{
+                    console.error('Error al copiar: ', err);
+                }});
+            }}
+        </script>
+    """
+    st.components.v1.html(copy_button_code)
 
     return group_nomenclature
 
@@ -212,10 +233,21 @@ def nivel_anuncios():
 
     st.write("Nomenclatura de Anuncio generada:", ad_nomenclature)
 
-    # Botón para copiar nomenclatura
-    if st.button("Copiar Nomenclatura de Anuncio"):
-        pyperclip.copy(ad_nomenclature)
-        st.success("Nomenclatura de Anuncio copiada al portapapeles.")
+    # Botón de copiar usando HTML y JavaScript
+    copy_button_code = f"""
+        <button onclick="copyToClipboard()">Copiar Nomenclatura de Anuncio</button>
+        <script>
+            function copyToClipboard() {{
+                var text = `{ad_nomenclature}`;
+                navigator.clipboard.writeText(text).then(function() {{
+                    alert('Copiado al portapapeles');
+                }}, function(err) {{
+                    console.error('Error al copiar: ', err);
+                }});
+            }}
+        </script>
+    """
+    st.components.v1.html(copy_button_code)
 
     return ad_nomenclature
 
@@ -257,10 +289,21 @@ def nivel_utms(campaign_nomenclature, group_nomenclature, ad_nomenclature):
 
     st.write("URL con Nomenclatura de UTM generada:", utm_nomenclature)
 
-    # Botón para copiar nomenclatura
-    if st.button("Copiar URL con Nomenclatura de UTM"):
-        pyperclip.copy(utm_nomenclature)
-        st.success("URL con Nomenclatura de UTM copiada al portapapeles.")
+    # Botón de copiar usando HTML y JavaScript
+    copy_button_code = f"""
+        <button onclick="copyToClipboard()">Copiar URL con Nomenclatura de UTM</button>
+        <script>
+            function copyToClipboard() {{
+                var text = `{utm_nomenclature}`;
+                navigator.clipboard.writeText(text).then(function() {{
+                    alert('Copiado al portapapeles');
+                }}, function(err) {{
+                    console.error('Error al copiar: ', err);
+                }});
+            }}
+        </script>
+    """
+    st.components.v1.html(copy_button_code)
 
     return utm_nomenclature
 
