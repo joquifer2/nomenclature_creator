@@ -350,7 +350,7 @@ def acerca_de():
     """)
     st.write("**Correo electrónico:** ads@jordiquiroga.com")
     st.write("**Perfil de LinkedIn:** [Jordi Quiroga Fernández](https://www.linkedin.com/in/jordiquirogafernandez/)")
-    st.image("images/jordi-portrait.jpg", caption="Jordi Quiroga", width=200)
+    st.image("images/Jordi-portrait.jpg", caption="Jordi Quiroga", width=200)
 
 
 if __name__ == "__main__":
