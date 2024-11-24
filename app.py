@@ -114,10 +114,10 @@ def nivel_campanas():
     st.write("Nomenclatura de Campaña generada:", campaign_nomenclature)
 
     # Botón para copiar nomenclatura
-    if st.button("Copiar Nomenclatura de Campaña"):
-        pyperclip.copy(campaign_nomenclature)
-        st.success("Nomenclatura de Campaña copiada al portapapeles.")
-
+    st.markdown(f"""
+        <button onclick="navigator.clipboard.writeText('{campaign_nomenclature}')">Copiar Nomenclatura de Campaña</button>
+        """, unsafe_allow_html=True)
+    
     return campaign_nomenclature
 
 
