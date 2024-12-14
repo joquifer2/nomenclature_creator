@@ -69,6 +69,7 @@ def pantalla_inicio():
 
 def nivel_campanas():
     st.header("Nivel 1: Campañas")
+    st.warning("Si no quieres que aparezca algún campo, selecciona -Personalizado- y déjalo en blanco.")
 
     # Sidebar informativo
     with st.sidebar:
@@ -78,46 +79,177 @@ def nivel_campanas():
         También puedes añadir campos personalizados para describir más detalladamente la campaña.
         """)
 
-    # Campos predefinidos para Campañas
-    platform = st.selectbox("Plataforma", ["Meta", "Google", "LinkedIn", "TikTok"])
-    ad_format = st.selectbox("Formato", ["Display", "Video", "Search", "Carousel", "Audio", "Native", "Banner", "Pop-up"])
-    audience = st.selectbox("Audiencia", ["Prospectos", "Retargeting", "Clientes"])
-    geography = st.selectbox("Geografía", ["ES", "LATAM", "EU", "Global"])
+    # Campo de selección para Plataforma
+    platform_options = ["Selecciona la plataforma publicitaria", "Meta", "Google", "LinkedIn", "TikTok", "Personalizado"]
+    platform = st.selectbox(
+        "Plataforma",
+        platform_options,
+        index=platform_options.index(st.session_state.get("platform", "Selecciona la plataforma publicitaria"))
+    )
+    if platform == "Personalizado":
+        platform = st.text_input(
+            "Introduce manualmente el nombre de la plataforma",
+            st.session_state.get("platform_custom", ""),
+            help="Escribe manualmente el nombre de la plataforma si seleccionaste 'Personalizado'."
+        )
+        st.session_state["platform_custom"] = platform
+    st.session_state["platform"] = platform
 
-    # Campos manuales para Campañas
-    product = st.text_input("Producto (introduce el valor manualmente)", "CursoSEO", help="Este campo es manual, puedes modificar el valor según el producto que desees.")
-    if product and not product.istitle():
-        st.warning("Por favor, asegúrate de que la primera letra de 'Producto' esté en mayúscula. Se ha capitalizado automáticamente.")
-        product = product.capitalize()
+    # Campo de selección para Formato
+    ad_format_options = ["Selecciona el formato publicitario", "Display", "Social", "Search", "Audio", "Native", "Banner", "Pop-up", "Personalizado"]
+    ad_format = st.selectbox(
+        "Formato",
+        ad_format_options,
+        index=ad_format_options.index(st.session_state.get("ad_format", "Selecciona el formato publicitario"))
+    )
+    if ad_format == "Personalizado":
+        ad_format = st.text_input(
+            "Introduce manualmente el nombre del formato",
+            st.session_state.get("ad_format_custom", ""),
+            help="Escribe manualmente el formato si seleccionaste 'Personalizado'."
+        )
+        st.session_state["ad_format_custom"] = ad_format
+    st.session_state["ad_format"] = ad_format
 
-    promotion = st.text_input("Promoción (introduce el valor manualmente)", "BlackFriday2024", help="Este campo es manual, personalizable para cada promoción.")
-    if promotion and not promotion.istitle():
-        st.warning("Por favor, asegúrate de que la primera letra de 'Promoción' esté en mayúscula. Se ha capitalizado automáticamente.")
-        promotion = promotion.capitalize()
+    # Campo de selección para Geografía
+    geography_options = ["Selecciona el área geográfica", "ES", "LATAM", "EU", "Global", "Personalizado"]
+    geography = st.selectbox(
+        "Área geográfica",
+        geography_options,
+        index=geography_options.index(st.session_state.get("geography", "Selecciona el área geográfica"))
+    )
+    if geography == "Personalizado":
+        geography = st.text_input(
+            "Introduce manualmente un área geográfica",
+            st.session_state.get("geography_custom", ""),
+            help="Escribe el acrónimo del área geográfica si seleccionaste 'Personalizado'."
+        )
+        st.session_state["geography_custom"] = geography
+    st.session_state["geography"] = geography
 
-    objective = st.selectbox("Objetivo", ["Awareness", "Conversiones", "Leads", "Engagement", "Tráfico", "Ventas", "Registro"])
+    # Campo de selección para Objetivo
+    objective_options = ["Selecciona el objetivo publicitario", "Awareness", "Conversiones", "Leads", "Engagement", "Tráfico", "Ventas", "Registro", "Personalizado"]
+    objective = st.selectbox(
+        "Objetivo publicitario",
+        objective_options,
+        index=objective_options.index(st.session_state.get("objective", "Selecciona el objetivo publicitario"))
+    )
+    if objective == "Personalizado":
+        objective = st.text_input(
+            "Introduce manualmente el objetivo publicitario",
+            st.session_state.get("objective_custom", ""),
+            help="Escribe manualmente el objetivo si seleccionaste 'Personalizado'."
+        )
+        st.session_state["objective_custom"] = objective
+    st.session_state["objective"] = objective
+
+    # Campo de selección para Audiencia
+    audience_options = ["Selecciona la audiencia", "Prospectos", "Retargeting", "Clientes", "Personalizado"]
+    audience = st.selectbox(
+        "Audiencia",
+        audience_options,
+        index=audience_options.index(st.session_state.get("audience", "Selecciona la audiencia"))
+    )
+    if audience == "Personalizado":
+        audience = st.text_input(
+            "Introduce manualmente el nombre de la audiencia",
+            st.session_state.get("audience_custom", ""),
+            help="Escribe manualmente el nombre de la audiencia si seleccionaste 'Personalizado'."
+        )
+        st.session_state["audience_custom"] = audience
+    st.session_state["audience"] = audience
+
+    # Campos manuales
+    product = st.text_input(
+        "Producto (introduce el valor manualmente)",
+        st.session_state.get("product", ""),
+        help="Este campo es manual, puedes modificar el valor según el producto que desees."
+    )
+    st.session_state["product"] = product
+
+    promotion = st.text_input(
+        "Promoción (introduce el valor manualmente)",
+        st.session_state.get("promotion", ""),
+        help="Este campo es manual, personalizable para cada promoción."
+    )
+    st.session_state["promotion"] = promotion
 
     # Añadir Campos Personalizados para Campañas
     st.subheader("Añadir Campos Personalizados")
-    num_campos = st.number_input("Número de campos personalizados a añadir", min_value=0, max_value=10, value=0, step=1)
+    num_campos = st.number_input(
+        "Número de campos personalizados a añadir",
+        min_value=0,
+        max_value=10,
+        value=st.session_state.get("num_campos", 0),
+        step=1
+    )
+    st.session_state["num_campos"] = num_campos
+
     campos_personalizados = []
     for i in range(num_campos):
-        nombre_campo = st.text_input(f"Nombre del Campo personalizado Campaña {i + 1}")
-        valor_campo = st.text_input(f"Valor para {nombre_campo}")
-        if valor_campo and not valor_campo.istitle():
-            st.warning("Por favor, asegúrate de que la primera letra del campo esté en mayúscula. Se ha capitalizado automáticamente.")
-            valor_campo = valor_campo.capitalize()
-        campos_personalizados.append(valor_campo)
+        nombre_campo = st.text_input(
+            f"Nombre del Campo personalizado Campaña {i + 1}",
+            st.session_state.get(f"nombre_campo_{i}", "")
+        )
+        valor_campo = st.text_input(
+            f"Valor para {nombre_campo}",
+            st.session_state.get(f"valor_campo_{i}", "")
+        )
+        st.session_state[f"nombre_campo_{i}"] = nombre_campo
+        st.session_state[f"valor_campo_{i}"] = valor_campo
+        if valor_campo:
+            campos_personalizados.append(valor_campo)
 
-    # Generar nomenclatura para Campaña
-    nomenclature_parts = [platform, ad_format, audience, geography, product, promotion, objective] + [campo for campo in campos_personalizados if campo]
-    campaign_nomenclature = '_'.join(filter(None, nomenclature_parts))  # Añadiendo solo el valor del campo
+    # Añadir un selectbox para elegir la estructura
+    structure_type = st.selectbox(
+        "Elige la estructura para la nomenclatura:",
+        ["Estructura clásica (_)", "Estructura con corchetes ([valor]-[valor])"],
+        index=0
+    )
+    st.session_state["structure_type"] = structure_type
 
-    st.write("Nomenclatura de Campaña generada:", campaign_nomenclature)
+    # Generar nomenclatura para Campaña según la estructura seleccionada
+    nomenclature_parts = [platform, ad_format, audience, geography, product, promotion, objective] + campos_personalizados
+
+    if any(part.startswith("Selecciona") for part in nomenclature_parts) or not any(nomenclature_parts):
+        campaign_nomenclature = ""  # Mostrar cuadro vacío hasta que los campos estén completos
+    else:
+        if structure_type == "Estructura clásica (_)":
+            campaign_nomenclature = '_'.join(filter(None, nomenclature_parts))  # Estructura clásica
+        elif structure_type == "Estructura con corchetes ([valor]-[valor])":
+            campaign_nomenclature = '-'.join([f"[{part}]" for part in filter(None, nomenclature_parts)])  # Estructura con corchetes
+
+    st.session_state["campaign_nomenclature"] = campaign_nomenclature
+
+    # Mostrar la nomenclatura en un cuadro estilizado
+    st.subheader("Nomenclatura de Campaña generada:")
+    st.markdown(
+        f"""
+        <div style="background-color:#e0f7fa; padding:10px; border-radius:5px; border: 1px solid #81d4fa;">
+            <p style="color:#0277bd; font-size:16px; font-family:monospace;">{campaign_nomenclature}</p>
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
+
 
     # Botón de copiar usando HTML y JavaScript
     copy_button_code = f"""
-        <button onclick="copyToClipboard()">Copiar Nomenclatura de Campaña</button>
+        <style>
+            .copy-button {{
+                background-color: #0277bd;
+                color: white;
+                font-size: 18px;
+                padding: 10px 20px;
+                border: none;
+                border-radius: 5px;
+                cursor: pointer;
+            }}
+            .copy-button:hover {{
+                background-color: #01579b;
+            }}
+        </style>
+        <button class="copy-button" onclick="copyToClipboard()">Copiar Nomenclatura de Campaña</button>
         <script>
             function copyToClipboard() {{
                 var text = `{campaign_nomenclature}`;
@@ -134,8 +266,10 @@ def nivel_campanas():
     return campaign_nomenclature
 
 
+
 def nivel_grupos_anuncios():
     st.header("Nivel 2: Grupos de Anuncios")
+    st.warning("Si no quieres que aparezca algún campo, selecciona -Personalizado- y déjalo en blanco.")
 
     # Sidebar informativo
     with st.sidebar:
@@ -145,38 +279,137 @@ def nivel_grupos_anuncios():
         Además, puedes añadir campos personalizados para definir mejor las características del grupo de anuncios.
         """)
 
-    # Campos predefinidos para Grupos de Anuncios
-    segmentation = st.selectbox("Segmentación", ["Lookalike", "Intereses", "Keywords", "Engagement"])
-    group_format = st.selectbox("Formato", ["Display", "Video", "Search", "Carousel", "Audio", "Native", "Banner", "Pop-up"])
-    group_objective = st.selectbox("Objetivo", ["Awareness", "Conversion", "Leads", "Engagement", "Tráfico", "Ventas", "Registro"])
+    # Campo de selección para Segmentación
+    segmentation_options = ["Introduce el tipo de segmentación", "Lookalike", "Intereses", "Keywords", "Engagement", "Personalizado"]
+    segmentation = st.selectbox(
+        "Segmentación",
+        segmentation_options,
+        index=segmentation_options.index(st.session_state.get("segmentation", "Introduce el tipo de segmentación"))
+    )
+    if segmentation == "Personalizado":
+        segmentation = st.text_input(
+            "Introduce manualmente la segmentación",
+            st.session_state.get("segmentation_custom", ""),
+            help="Escribe manualmente el tipo de segmentación si seleccionaste 'Personalizado'."
+        )
+        st.session_state["segmentation_custom"] = segmentation
+    st.session_state["segmentation"] = segmentation
 
-    # Campos manuales para Grupos de Anuncios
-    creative_theme = st.text_input("Tema del Creativo (introduce el valor manualmente)", "Descuento", help="Este campo es manual, puedes modificarlo según el tema creativo del grupo de anuncios.")
-    if creative_theme and not creative_theme.istitle():
-        st.warning("Por favor, asegúrate de que la primera letra de 'Tema del Creativo' esté en mayúscula. Se ha capitalizado automáticamente.")
-        creative_theme = creative_theme.capitalize()
+    # Campo de selección para Formato
+    group_format_options = ["Introduce el tipo de formato", "Display", "Video", "Search", "Carousel", "Audio", "Native", "Banner", "Pop-up", "Personalizado"]
+    group_format = st.selectbox(
+        "Formato",
+        group_format_options,
+        index=group_format_options.index(st.session_state.get("group_format", "Introduce el tipo de formato"))
+    )
+    if group_format == "Personalizado":
+        group_format = st.text_input(
+            "Introduce manualmente el formato",
+            st.session_state.get("group_format_custom", ""),
+            help="Escribe manualmente el formato si seleccionaste 'Personalizado'."
+        )
+        st.session_state["group_format_custom"] = group_format
+    st.session_state["group_format"] = group_format
+
+    # Campo de selección para Objetivo
+    group_objective_options = ["Introduce el tipo de objetivo", "Awareness", "Conversion", "Leads", "Engagement", "Tráfico", "Ventas", "Registro", "Personalizado"]
+    group_objective = st.selectbox(
+        "Objetivo",
+        group_objective_options,
+        index=group_objective_options.index(st.session_state.get("group_objective", "Introduce el tipo de objetivo"))
+    )
+    if group_objective == "Personalizado":
+        group_objective = st.text_input(
+            "Introduce manualmente el objetivo",
+            st.session_state.get("group_objective_custom", ""),
+            help="Escribe manualmente el objetivo si seleccionaste 'Personalizado'."
+        )
+        st.session_state["group_objective_custom"] = group_objective
+    st.session_state["group_objective"] = group_objective
+
+    # Campo manual para Tema del Creativo
+    creative_theme = st.text_input(
+        "Tema del Creativo (introduce el valor manualmente)",
+        st.session_state.get("creative_theme", ""),
+        help="Este campo es manual, puedes modificarlo según el tema creativo del grupo de anuncios."
+    )
+    st.session_state["creative_theme"] = creative_theme
 
     # Añadir Campos Personalizados para Grupos de Anuncios
     st.subheader("Añadir Campos Personalizados")
-    num_campos = st.number_input("Número de campos personalizados a añadir para Grupos de Anuncios", min_value=0, max_value=10, value=0, step=1)
+    num_campos = st.number_input(
+        "Número de campos personalizados a añadir para Grupos de Anuncios",
+        min_value=0,
+        max_value=10,
+        value=st.session_state.get("num_campos_grupos", 0),
+        step=1
+    )
+    st.session_state["num_campos_grupos"] = num_campos
+
     campos_personalizados = []
     for i in range(num_campos):
-        nombre_campo = st.text_input(f"Nombre del Campo personalizado Grupo de Anuncio {i + 1}")
-        valor_campo = st.text_input(f"Valor para {nombre_campo}")
-        if valor_campo and not valor_campo.istitle():
-            st.warning("Por favor, asegúrate de que la primera letra del campo esté en mayúscula. Se ha capitalizado automáticamente.")
-            valor_campo = valor_campo.capitalize()
-        campos_personalizados.append(valor_campo)
+        nombre_campo = st.text_input(
+            f"Nombre del Campo personalizado Grupo de Anuncio {i + 1}",
+            st.session_state.get(f"nombre_campo_grupo_{i}", "")
+        )
+        valor_campo = st.text_input(
+            f"Valor para {nombre_campo}",
+            st.session_state.get(f"valor_campo_grupo_{i}", "")
+        )
+        st.session_state[f"nombre_campo_grupo_{i}"] = nombre_campo
+        st.session_state[f"valor_campo_grupo_{i}"] = valor_campo
+        if valor_campo:
+            campos_personalizados.append(valor_campo)
 
-    # Generar nomenclatura para Grupo de Anuncios
-    nomenclature_parts = [segmentation, group_format, group_objective, creative_theme] + [campo for campo in campos_personalizados if campo]
-    group_nomenclature = '_'.join(filter(None, nomenclature_parts))  # Añadiendo solo el valor del campo
+    # Añadir un selectbox para elegir la estructura
+    structure_type = st.selectbox(
+        "Elige la estructura para la nomenclatura:",
+        ["Estructura clásica (_)", "Estructura con corchetes ([valor]-[valor])"],
+        index=0
+    )
+    st.session_state["structure_type"] = structure_type
 
-    st.write("Nomenclatura de Grupo de Anuncios generada:", group_nomenclature)
+    # Generar nomenclatura para Grupo de Anuncios según la estructura seleccionada
+    nomenclature_parts = [segmentation, group_format, group_objective, creative_theme] + campos_personalizados
+
+    if any(part.startswith("Introduce") for part in nomenclature_parts) or not any(nomenclature_parts):
+        group_nomenclature = ""  # Mostrar cuadro vacío hasta que los campos estén completos
+    else:
+        if structure_type == "Estructura clásica (_)":
+            group_nomenclature = '_'.join(filter(None, nomenclature_parts))  # Estructura clásica
+        elif structure_type == "Estructura con corchetes ([valor]-[valor])":
+            group_nomenclature = '-'.join([f"[{part}]" for part in filter(None, nomenclature_parts)])  # Estructura con corchetes
+
+    st.session_state["group_nomenclature"] = group_nomenclature
+
+    # Mostrar la nomenclatura en un cuadro estilizado
+    st.subheader("Nomenclatura de Grupo de Anuncios generada:")
+    st.markdown(
+        f"""
+        <div style="background-color:#e0f7fa; padding:10px; border-radius:5px; border: 1px solid #81d4fa;">
+            <p style="color:#0277bd; font-size:16px; font-family:monospace;">{group_nomenclature}</p>
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
 
     # Botón de copiar usando HTML y JavaScript
     copy_button_code = f"""
-        <button onclick="copyToClipboard()">Copiar Nomenclatura de Grupo de Anuncios</button>
+        <style>
+            .copy-button {{
+                background-color: #0277bd;
+                color: white;
+                font-size: 18px;
+                padding: 10px 20px;
+                border: none;
+                border-radius: 5px;
+                cursor: pointer;
+            }}
+            .copy-button:hover {{
+                background-color: #01579b;
+            }}
+        </style>
+        <button class="copy-button" onclick="copyToClipboard()">Copiar Nomenclatura de Grupo de Anuncios</button>
         <script>
             function copyToClipboard() {{
                 var text = `{group_nomenclature}`;
@@ -184,7 +417,7 @@ def nivel_grupos_anuncios():
                     alert('Copiado al portapapeles');
                 }}, function(err) {{
                     console.error('Error al copiar: ', err);
-                }});
+                }});  
             }}
         </script>
     """
@@ -193,8 +426,12 @@ def nivel_grupos_anuncios():
     return group_nomenclature
 
 
+
+
+
 def nivel_anuncios():
     st.header("Nivel 3: Anuncios")
+    st.warning("Si no quieres que aparezca algún campo, selecciona -Personalizado- y déjalo en blanco.")
 
     # Sidebar informativo
     with st.sidebar:
@@ -204,41 +441,127 @@ def nivel_anuncios():
         Puedes añadir campos personalizados para especificar más detalles si es necesario.
         """)
 
-    # Campos predefinidos para Anuncios
-    type_creative = st.selectbox("Tipo de Creativo", ["Video", "Imagen", "Carousel", "Banner", "Audio", "Native", "Pop-up"])
+    # Campo de selección para Tipo de Creativo
+    type_creative_options = ["Introduce el tipo de creativo", "Personalizado", "Video", "Imagen", "Carousel", "Banner", "Audio", "Native", "Pop-up"]
+    type_creative_default = "Introduce el tipo de creativo"
 
-    # Campos manuales para Anuncios
-    variant = st.text_input("Variante (introduce el valor manualmente para pruebas A/B)", "A", help="Este campo es manual, especifica la variante para las pruebas A/B.")
-    if variant and not variant.istitle():
-        st.warning("Por favor, asegúrate de que la primera letra de 'Variante' esté en mayúscula. Se ha capitalizado automáticamente.")
-        variant = variant.capitalize()
+    # Verificamos si el valor actual está en las opciones; si no, usamos el valor predeterminado
+    current_type_creative = st.session_state.get("type_creative", type_creative_default)
+    if current_type_creative not in type_creative_options:
+        current_type_creative = type_creative_default
 
-    ad_id = st.text_input("ID del Anuncio (opcional, introduce el valor manualmente)", "01", help="Este campo es manual y opcional, puedes personalizarlo según la identificación del anuncio.")
-    if ad_id and not ad_id.istitle():
-        st.warning("Por favor, asegúrate de que la primera letra de 'ID del Anuncio' esté en mayúscula. Se ha capitalizado automáticamente.")
-        ad_id = ad_id.capitalize()
+    # Configuramos el selectbox con un índice seguro
+    type_creative = st.selectbox(
+        "Tipo de Creativo",
+        type_creative_options,
+        index=type_creative_options.index(current_type_creative),
+        help="Selecciona el tipo de creativo o introduce uno manual."
+    )
+
+    # Guardamos en session_state
+    if type_creative == "Personalizado":
+        type_creative = st.text_input(
+            "Introduce el tipo de creativo",
+            st.session_state.get("type_creative_custom", ""),
+            help="Escribe el tipo de creativo si seleccionaste 'Personalizado'."
+        )
+        st.session_state["type_creative_custom"] = type_creative
+
+    st.session_state["type_creative"] = type_creative
+
+
+    # Campo manual para Variante
+    variant = st.text_input(
+        "Variante (introduce el valor manualmente para pruebas A/B)",
+        st.session_state.get("variant", ""),
+        help="Especifica la variante para las pruebas A/B (e.g., A, B, etc.)."
+    )
+    st.session_state["variant"] = variant
+
+    # Campo manual para ID del Anuncio
+    ad_id = st.text_input(
+        "ID del Anuncio (opcional, introduce el valor manualmente)",
+        st.session_state.get("ad_id", ""),
+        help="Introduce un identificador único para el anuncio."
+    )
+    st.session_state["ad_id"] = ad_id
 
     # Añadir Campos Personalizados para Anuncios
     st.subheader("Añadir Campos Personalizados")
-    num_campos = st.number_input("Número de campos personalizados a añadir para Anuncios", min_value=0, max_value=10, value=0, step=1)
+    num_campos = st.number_input(
+        "Número de campos personalizados a añadir para Anuncios",
+        min_value=0,
+        max_value=10,
+        value=st.session_state.get("num_campos_anuncios", 0),
+        step=1
+    )
+    st.session_state["num_campos_anuncios"] = num_campos
+
     campos_personalizados = []
     for i in range(num_campos):
-        nombre_campo = st.text_input(f"Nombre del Campo personalizado Anuncio {i + 1}")
-        valor_campo = st.text_input(f"Valor para {nombre_campo}")
-        if valor_campo and not valor_campo.istitle():
-            st.warning("Por favor, asegúrate de que la primera letra del campo esté en mayúscula. Se ha capitalizado automáticamente.")
-            valor_campo = valor_campo.capitalize()
-        campos_personalizados.append(valor_campo)
+        nombre_campo = st.text_input(
+            f"Nombre del Campo personalizado Anuncio {i + 1}",
+            st.session_state.get(f"nombre_campo_anuncio_{i}", "")
+        )
+        valor_campo = st.text_input(
+            f"Valor para {nombre_campo}",
+            st.session_state.get(f"valor_campo_anuncio_{i}", "")
+        )
+        st.session_state[f"nombre_campo_anuncio_{i}"] = nombre_campo
+        st.session_state[f"valor_campo_anuncio_{i}"] = valor_campo
+        if valor_campo:
+            campos_personalizados.append(valor_campo)
 
-    # Generar nomenclatura para Anuncio
-    nomenclature_parts = [type_creative, variant, ad_id] + [campo for campo in campos_personalizados if campo]
-    ad_nomenclature = '_'.join(filter(None, nomenclature_parts))  # Añadiendo solo el valor del campo
+    # Añadir un selectbox para elegir la estructura
+    structure_type = st.selectbox(
+        "Elige la estructura para la nomenclatura:",
+        ["Estructura clásica (_)", "Estructura con corchetes ([valor]-[valor])"],
+        index=0
+    )
+    st.session_state["structure_type"] = structure_type
 
-    st.write("Nomenclatura de Anuncio generada:", ad_nomenclature)
+    # Generar nomenclatura para Anuncio según la estructura seleccionada
+    nomenclature_parts = [type_creative, variant, ad_id] + campos_personalizados
+
+    if any(part.startswith("Introduce") for part in nomenclature_parts) or not any(nomenclature_parts):
+        ad_nomenclature = ""  # Mostrar cuadro vacío hasta que los campos estén completos
+    else:
+        if structure_type == "Estructura clásica (_)":
+            ad_nomenclature = '_'.join(filter(None, nomenclature_parts))  # Estructura clásica
+        elif structure_type == "Estructura con corchetes ([valor]-[valor])":
+            ad_nomenclature = '-'.join([f"[{part}]" for part in filter(None, nomenclature_parts)])  # Estructura con corchetes
+
+    st.session_state["ad_nomenclature"] = ad_nomenclature
+
+    # Mostrar la nomenclatura en un cuadro estilizado
+    st.subheader("Nomenclatura de Anuncio generada:")
+    st.markdown(
+        f"""
+        <div style="background-color:#e0f7fa; padding:10px; border-radius:5px; border: 1px solid #81d4fa;">
+            <p style="color:#0277bd; font-size:16px; font-family:monospace;">{ad_nomenclature}</p>
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
+
 
     # Botón de copiar usando HTML y JavaScript
     copy_button_code = f"""
-        <button onclick="copyToClipboard()">Copiar Nomenclatura de Anuncio</button>
+        <style>
+            .copy-button {{
+                background-color: #0277bd;
+                color: white;
+                font-size: 18px;
+                padding: 10px 20px;
+                border: none;
+                border-radius: 5px;
+                cursor: pointer;
+            }}
+            .copy-button:hover {{
+                background-color: #01579b;
+            }}
+        </style>
+        <button class="copy-button" onclick="copyToClipboard()">Copiar Nomenclatura de Anuncio</button>
         <script>
             function copyToClipboard() {{
                 var text = `{ad_nomenclature}`;
@@ -246,7 +569,7 @@ def nivel_anuncios():
                     alert('Copiado al portapapeles');
                 }}, function(err) {{
                     console.error('Error al copiar: ', err);
-                }});
+                }});  
             }}
         </script>
     """
@@ -284,17 +607,46 @@ def nivel_utms(campaign_nomenclature, group_nomenclature, ad_nomenclature):
         f"utm_medium={medium}",
         f"utm_campaign={campaign_utm}"
     ]
+
     if content_utm:
         utm_parts.append(f"utm_content={content_utm}")
     if term_utm:
         utm_parts.append(f"utm_term={term_utm}")
-    utm_nomenclature = f"{base_url}?{'&'.join(utm_parts)}"
 
-    st.write("URL con Nomenclatura de UTM generada:", utm_nomenclature)
+    # Validar si todos los campos obligatorios tienen valores válidos
+    if base_url.startswith("http") and all(utm_parts):
+        utm_nomenclature = f"{base_url}?{'&'.join(utm_parts)}"
+    else:
+        utm_nomenclature = ""  # Mostrar vacío si falta algún campo obligatorio
+
+    # Mostrar la URL generada en un cuadro estilizado
+    st.subheader("URL con Nomenclatura de UTM generada:")
+    st.markdown(
+        f"""
+        <div style="background-color:#e0f7fa; padding:10px; border-radius:5px; border: 1px solid #81d4fa;">
+            <p style="color:#0277bd; font-size:16px; font-family:monospace;">{utm_nomenclature}</p>
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
 
     # Botón de copiar usando HTML y JavaScript
     copy_button_code = f"""
-        <button onclick="copyToClipboard()">Copiar URL con Nomenclatura de UTM</button>
+        <style>
+            .copy-button {{
+                background-color: #0277bd;
+                color: white;
+                font-size: 18px;
+                padding: 10px 20px;
+                border: none;
+                border-radius: 5px;
+                cursor: pointer;
+            }}
+            .copy-button:hover {{
+                background-color: #01579b;
+            }}
+        </style>
+        <button class="copy-button" onclick="copyToClipboard()">Copiar URL con Nomenclatura de UTM</button>
         <script>
             function copyToClipboard() {{
                 var text = `{utm_nomenclature}`;
@@ -302,13 +654,16 @@ def nivel_utms(campaign_nomenclature, group_nomenclature, ad_nomenclature):
                     alert('Copiado al portapapeles');
                 }}, function(err) {{
                     console.error('Error al copiar: ', err);
-                }});
+                }});  
             }}
         </script>
     """
     st.components.v1.html(copy_button_code)
 
-    return utm_nomenclature
+
+    return utm_nomenclature   
+
+
 
 
 def exportar_nomenclaturas(campaign_nomenclature, group_nomenclature, ad_nomenclature, utm_nomenclature):
@@ -333,14 +688,16 @@ def exportar_nomenclaturas(campaign_nomenclature, group_nomenclature, ad_nomencl
             mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
         )
 
+
+
 def acerca_de():
     st.title("Acerca de")
     st.write("""
-    **¡Bienvenido a la sección Acerca de!**
+    **¡Hola, encantado de saludarte!**
 
-    Soy Jordi Quiroga, un profesional apasionado del marketing digital y la ciencia de datos. Con años de experiencia en la industria del marketing, he trabajado con agencias y marcas para optimizar sus estrategias publicitarias a través del poder de los datos.
+    Soy Jordi Quiroga, un profesional apasionado del marketing digital y la ciencia de datos. Con 15 años de experiencia en la industria del marketing, he trabajado con agencias y marcas para optimizar sus estrategias publicitarias a través del poder de los datos.
 
-    Esta aplicación fue creada con el objetivo de ayudar a los profesionales del marketing a estructurar mejor sus campañas y aprovechar al máximo los recursos publicitarios.
+    He creado esta aplicación con el objetivo de ayudar a los profesionales del marketing a estructurar mejor sus campañas y aprovechar al máximo los recursos publicitarios.
     Mi enfoque siempre ha sido hacer accesible y comprensible la información, utilizando herramientas tecnológicas para transformar datos dispersos en insights accionables.
     
     Me encanta la tecnología, el aprendizaje automático y explorar nuevas formas de hacer que el marketing basado en datos sea más eficiente y fácil para todos.
@@ -363,29 +720,6 @@ if __name__ == "__main__":
     if 'utm_nomenclature' not in st.session_state:
         st.session_state['utm_nomenclature'] = ""
     main()
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
