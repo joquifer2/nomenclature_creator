@@ -29,14 +29,20 @@ def main():
         ad_nomenclature = nivel_anuncios()
         st.session_state["ad_nomenclature"] = ad_nomenclature
     elif paso == "Nivel 4: UTMs":
+        st.header("Nivel 4: UTMs")
+        st.write("""
+        Genera la URL con parámetros UTM para el seguimiento de la campaña publicitaria.
+        Configura la fuente, el medio, la campaña y otros parámetros para crear un enlace rastreable.
+        """)
+
+        # Obtener valores heredados de los niveles anteriores
         campaign_nomenclature = st.session_state.get("campaign_nomenclature", "")
         group_nomenclature = st.session_state.get("group_nomenclature", "")
         ad_nomenclature = st.session_state.get("ad_nomenclature", "")
-        if campaign_nomenclature and group_nomenclature and ad_nomenclature:
-            utm_nomenclature = nivel_utms(campaign_nomenclature, group_nomenclature, ad_nomenclature)
-            st.session_state["utm_nomenclature"] = utm_nomenclature
-        else:
-            st.warning("Por favor, completa los niveles anteriores antes de generar UTMs.")
+
+        # Pasar los valores heredados (incluso si están vacíos) a nivel_utms
+        utm_nomenclature = nivel_utms(campaign_nomenclature, group_nomenclature, ad_nomenclature)
+        st.session_state["utm_nomenclature"] = utm_nomenclature
     elif paso == "Exportar Nomenclaturas":
         exportar_nomenclaturas(
             st.session_state.get("campaign_nomenclature", ""),
@@ -46,6 +52,8 @@ def main():
         )
     elif paso == "Acerca de":
         acerca_de()
+
+
 
 
 def pantalla_inicio():
@@ -80,11 +88,16 @@ def nivel_campanas():
         """)
 
     # Campo de selección para Plataforma
-    platform_options = ["Selecciona la plataforma publicitaria", "Meta", "Google", "LinkedIn", "TikTok", "Personalizado"]
+    platform_options = ["Selecciona el canal o la plataforma publicitaria", "FB", "GG", "LI", "TT", "Personalizado"]
+    platform = st.session_state.get("platform", "Selecciona la plataforma publicitaria")
+    if platform not in platform_options:
+        platform = "Selecciona el canal o la plataforma publicitaria"
+    platform_index = platform_options.index(platform)
+
     platform = st.selectbox(
-        "Plataforma",
+        "Canal o plataforma, FB (Facebook), IG (Instagram), GG (Google), entre otros",
         platform_options,
-        index=platform_options.index(st.session_state.get("platform", "Selecciona la plataforma publicitaria"))
+        index=platform_index
     )
     if platform == "Personalizado":
         platform = st.text_input(
@@ -95,28 +108,38 @@ def nivel_campanas():
         st.session_state["platform_custom"] = platform
     st.session_state["platform"] = platform
 
-    # Campo de selección para Formato
-    ad_format_options = ["Selecciona el formato publicitario", "Display", "Social", "Search", "Audio", "Native", "Banner", "Pop-up", "Personalizado"]
-    ad_format = st.selectbox(
-        "Formato",
-        ad_format_options,
-        index=ad_format_options.index(st.session_state.get("ad_format", "Selecciona el formato publicitario"))
+    # Campo de selección Red publicitaria
+    ad_network_options = ["Selecciona la red publicitaria", "Display", "Social", "Search", "Native", "Personalizado"]
+    network = st.session_state.get("network", "Selecciona la red publicitaria")
+    if network not in ad_network_options:
+        network = "Selecciona la red publicitaria"
+    network_index = ad_network_options.index(network)
+
+    network = st.selectbox(
+        "Red publicitaria, si procede (Social, Search, Display, Native...)",
+        ad_network_options,
+        index=network_index
     )
-    if ad_format == "Personalizado":
-        ad_format = st.text_input(
-            "Introduce manualmente el nombre del formato",
-            st.session_state.get("ad_format_custom", ""),
-            help="Escribe manualmente el formato si seleccionaste 'Personalizado'."
+    if network == "Personalizado":
+        network = st.text_input(
+            "Introduce manualmente la red publicitaria",
+            st.session_state.get("network_custom", ""),
+            help="Escribe manualmente la red publicitaria si seleccionaste 'Personalizado'."
         )
-        st.session_state["ad_format_custom"] = ad_format
-    st.session_state["ad_format"] = ad_format
+        st.session_state["network_custom"] = network
+    st.session_state["network"] = network
 
     # Campo de selección para Geografía
     geography_options = ["Selecciona el área geográfica", "ES", "LATAM", "EU", "Global", "Personalizado"]
+    geography = st.session_state.get("geography", "Selecciona el área geográfica")
+    if geography not in geography_options:
+        geography = "Selecciona el área geográfica"
+    geography_index = geography_options.index(geography)
+
     geography = st.selectbox(
-        "Área geográfica",
+        "Área geográfica, si procede (España, LATAM, EU...)",
         geography_options,
-        index=geography_options.index(st.session_state.get("geography", "Selecciona el área geográfica"))
+        index=geography_index
     )
     if geography == "Personalizado":
         geography = st.text_input(
@@ -129,10 +152,15 @@ def nivel_campanas():
 
     # Campo de selección para Objetivo
     objective_options = ["Selecciona el objetivo publicitario", "Awareness", "Conversiones", "Leads", "Engagement", "Tráfico", "Ventas", "Registro", "Personalizado"]
+    objective = st.session_state.get("objective", "Selecciona el objetivo publicitario")
+    if objective not in objective_options:
+        objective = "Selecciona el objetivo publicitario"
+    objective_index = objective_options.index(objective)
+
     objective = st.selectbox(
-        "Objetivo publicitario",
+        "Objetivo publicitario (Tráfico, Leads, Ventas...)",
         objective_options,
-        index=objective_options.index(st.session_state.get("objective", "Selecciona el objetivo publicitario"))
+        index=objective_index
     )
     if objective == "Personalizado":
         objective = st.text_input(
@@ -143,21 +171,26 @@ def nivel_campanas():
         st.session_state["objective_custom"] = objective
     st.session_state["objective"] = objective
 
-    # Campo de selección para Audiencia
-    audience_options = ["Selecciona la audiencia", "Prospectos", "Retargeting", "Clientes", "Personalizado"]
-    audience = st.selectbox(
-        "Audiencia",
-        audience_options,
-        index=audience_options.index(st.session_state.get("audience", "Selecciona la audiencia"))
+    # Campo de selección para el tipo de campaña
+    campaign_options = ["Selecciona el tipo de campaña", "Prospecting", "Retargeting", "Personalizado"]
+    campaign_type = st.session_state.get("campaign_type", "Selecciona el tipo de campaña")
+    if campaign_type not in campaign_options:
+        campaign_type = "Selecciona el tipo de campaña"
+    campaign_type_index = campaign_options.index(campaign_type)
+
+    campaign_type = st.selectbox(
+        "Tipo de campaña (Prospecting, Retargeting...)",
+        campaign_options,
+        index=campaign_type_index
     )
-    if audience == "Personalizado":
-        audience = st.text_input(
-            "Introduce manualmente el nombre de la audiencia",
-            st.session_state.get("audience_custom", ""),
-            help="Escribe manualmente el nombre de la audiencia si seleccionaste 'Personalizado'."
+    if campaign_type == "Personalizado":
+        campaign_type = st.text_input(
+            "Introduce manualmente el tipo de campaña",
+            st.session_state.get("campaign_type_custom", ""),
+            help="Escribe manualmente el nombre del tipo de campaña si seleccionaste 'Personalizado'."
         )
-        st.session_state["audience_custom"] = audience
-    st.session_state["audience"] = audience
+        st.session_state["campaign_type_custom"] = campaign_type
+    st.session_state["campaign_type"] = campaign_type
 
     # Campos manuales
     product = st.text_input(
@@ -209,7 +242,7 @@ def nivel_campanas():
     st.session_state["structure_type"] = structure_type
 
     # Generar nomenclatura para Campaña según la estructura seleccionada
-    nomenclature_parts = [platform, ad_format, audience, geography, product, promotion, objective] + campos_personalizados
+    nomenclature_parts = [platform, network, geography, objective, campaign_type, product, promotion] + campos_personalizados
 
     if any(part.startswith("Selecciona") for part in nomenclature_parts) or not any(nomenclature_parts):
         campaign_nomenclature = ""  # Mostrar cuadro vacío hasta que los campos estén completos
@@ -232,38 +265,8 @@ def nivel_campanas():
         unsafe_allow_html=True
     )
 
-
-    # Botón de copiar usando HTML y JavaScript
-    copy_button_code = f"""
-        <style>
-            .copy-button {{
-                background-color: #0277bd;
-                color: white;
-                font-size: 18px;
-                padding: 10px 20px;
-                border: none;
-                border-radius: 5px;
-                cursor: pointer;
-            }}
-            .copy-button:hover {{
-                background-color: #01579b;
-            }}
-        </style>
-        <button class="copy-button" onclick="copyToClipboard()">Copiar Nomenclatura de Campaña</button>
-        <script>
-            function copyToClipboard() {{
-                var text = `{campaign_nomenclature}`;
-                navigator.clipboard.writeText(text).then(function() {{
-                    alert('Copiado al portapapeles');
-                }}, function(err) {{
-                    console.error('Error al copiar: ', err);
-                }});
-            }}
-        </script>
-    """
-    st.components.v1.html(copy_button_code)
-
     return campaign_nomenclature
+
 
 
 
@@ -280,28 +283,41 @@ def nivel_grupos_anuncios():
         """)
 
     # Campo de selección para Segmentación
-    segmentation_options = ["Introduce el tipo de segmentación", "Lookalike", "Intereses", "Keywords", "Engagement", "Personalizado"]
+    segmentation_options = ["Introduce el público objetivo o segmento", "Lkl", "Int", "Kw", "Bbdd", "Personalizado"]
+    segmentation = st.session_state.get("segmentation", "Introduce el público objetivo o segmento")
+    if segmentation not in segmentation_options:
+        segmentation = "Introduce el público objetivo o segmento"
+    segmentation_index = segmentation_options.index(segmentation)
+
     segmentation = st.selectbox(
-        "Segmentación",
+        "Público objetivo o segmento (lookalike, intereses, keywords, bbdd...)",
         segmentation_options,
-        index=segmentation_options.index(st.session_state.get("segmentation", "Introduce el tipo de segmentación"))
+        index=segmentation_index
     )
     if segmentation == "Personalizado":
         segmentation = st.text_input(
-            "Introduce manualmente la segmentación",
+            "Introduce manualmente el público objetivo o segmento",
             st.session_state.get("segmentation_custom", ""),
-            help="Escribe manualmente el tipo de segmentación si seleccionaste 'Personalizado'."
+            help="Escribe manualmente el público objetivo o segmento si seleccionaste 'Personalizado'."
         )
         st.session_state["segmentation_custom"] = segmentation
     st.session_state["segmentation"] = segmentation
 
     # Campo de selección para Formato
-    group_format_options = ["Introduce el tipo de formato", "Display", "Video", "Search", "Carousel", "Audio", "Native", "Banner", "Pop-up", "Personalizado"]
+    group_format_options = ["Introduce el tipo de formato", "Imagen", "Video", "Carrusel", "Audio", "Personalizado"]
+
+    group_format = st.session_state.get("group_format", "Introduce el tipo de formato")
+    if group_format not in group_format_options:
+        group_format = "Introduce el tipo de formato"
+
+    group_format_index = group_format_options.index(group_format)
+
     group_format = st.selectbox(
-        "Formato",
+        "Formato, (opcional, si todos los anuncios dentro del grupo comparten el formato):",
         group_format_options,
-        index=group_format_options.index(st.session_state.get("group_format", "Introduce el tipo de formato"))
+        index=group_format_index
     )
+
     if group_format == "Personalizado":
         group_format = st.text_input(
             "Introduce manualmente el formato",
@@ -309,31 +325,8 @@ def nivel_grupos_anuncios():
             help="Escribe manualmente el formato si seleccionaste 'Personalizado'."
         )
         st.session_state["group_format_custom"] = group_format
+
     st.session_state["group_format"] = group_format
-
-    # Campo de selección para Objetivo
-    group_objective_options = ["Introduce el tipo de objetivo", "Awareness", "Conversion", "Leads", "Engagement", "Tráfico", "Ventas", "Registro", "Personalizado"]
-    group_objective = st.selectbox(
-        "Objetivo",
-        group_objective_options,
-        index=group_objective_options.index(st.session_state.get("group_objective", "Introduce el tipo de objetivo"))
-    )
-    if group_objective == "Personalizado":
-        group_objective = st.text_input(
-            "Introduce manualmente el objetivo",
-            st.session_state.get("group_objective_custom", ""),
-            help="Escribe manualmente el objetivo si seleccionaste 'Personalizado'."
-        )
-        st.session_state["group_objective_custom"] = group_objective
-    st.session_state["group_objective"] = group_objective
-
-    # Campo manual para Tema del Creativo
-    creative_theme = st.text_input(
-        "Tema del Creativo (introduce el valor manualmente)",
-        st.session_state.get("creative_theme", ""),
-        help="Este campo es manual, puedes modificarlo según el tema creativo del grupo de anuncios."
-    )
-    st.session_state["creative_theme"] = creative_theme
 
     # Añadir Campos Personalizados para Grupos de Anuncios
     st.subheader("Añadir Campos Personalizados")
@@ -370,7 +363,7 @@ def nivel_grupos_anuncios():
     st.session_state["structure_type"] = structure_type
 
     # Generar nomenclatura para Grupo de Anuncios según la estructura seleccionada
-    nomenclature_parts = [segmentation, group_format, group_objective, creative_theme] + campos_personalizados
+    nomenclature_parts = [segmentation, group_format] + campos_personalizados
 
     if any(part.startswith("Introduce") for part in nomenclature_parts) or not any(nomenclature_parts):
         group_nomenclature = ""  # Mostrar cuadro vacío hasta que los campos estén completos
@@ -393,41 +386,7 @@ def nivel_grupos_anuncios():
         unsafe_allow_html=True
     )
 
-    # Botón de copiar usando HTML y JavaScript
-    copy_button_code = f"""
-        <style>
-            .copy-button {{
-                background-color: #0277bd;
-                color: white;
-                font-size: 18px;
-                padding: 10px 20px;
-                border: none;
-                border-radius: 5px;
-                cursor: pointer;
-            }}
-            .copy-button:hover {{
-                background-color: #01579b;
-            }}
-        </style>
-        <button class="copy-button" onclick="copyToClipboard()">Copiar Nomenclatura de Grupo de Anuncios</button>
-        <script>
-            function copyToClipboard() {{
-                var text = `{group_nomenclature}`;
-                navigator.clipboard.writeText(text).then(function() {{
-                    alert('Copiado al portapapeles');
-                }}, function(err) {{
-                    console.error('Error al copiar: ', err);
-                }});  
-            }}
-        </script>
-    """
-    st.components.v1.html(copy_button_code)
-
     return group_nomenclature
-
-
-
-
 
 def nivel_anuncios():
     st.header("Nivel 3: Anuncios")
@@ -469,14 +428,21 @@ def nivel_anuncios():
 
     st.session_state["type_creative"] = type_creative
 
-
-    # Campo manual para Variante
+    # Campo manual para la variación creativa
     variant = st.text_input(
-        "Variante (introduce el valor manualmente para pruebas A/B)",
+        "Variación creativa (introduce el valor manualmente para pruebas A/B)",
         st.session_state.get("variant", ""),
         help="Especifica la variante para las pruebas A/B (e.g., A, B, etc.)."
     )
     st.session_state["variant"] = variant
+
+    # Nuevo campo: Ángulo creativo
+    creative_angle = st.text_input(
+        "Ángulo creativo (introduce el valor manualmente)",
+        st.session_state.get("creative_angle", ""),
+        help="Especifica el ángulo creativo del anuncio (e.g., Oferta, Solución, Innovación, etc.)."
+    )
+    st.session_state["creative_angle"] = creative_angle
 
     # Campo manual para ID del Anuncio
     ad_id = st.text_input(
@@ -521,7 +487,7 @@ def nivel_anuncios():
     st.session_state["structure_type"] = structure_type
 
     # Generar nomenclatura para Anuncio según la estructura seleccionada
-    nomenclature_parts = [type_creative, variant, ad_id] + campos_personalizados
+    nomenclature_parts = [type_creative, variant, creative_angle, ad_id] + campos_personalizados
 
     if any(part.startswith("Introduce") for part in nomenclature_parts) or not any(nomenclature_parts):
         ad_nomenclature = ""  # Mostrar cuadro vacío hasta que los campos estén completos
@@ -543,7 +509,6 @@ def nivel_anuncios():
         """,
         unsafe_allow_html=True
     )
-
 
     # Botón de copiar usando HTML y JavaScript
     copy_button_code = f"""
@@ -596,12 +561,47 @@ def nivel_utms(campaign_nomenclature, group_nomenclature, ad_nomenclature):
     source = st.selectbox("Fuente (utm_source)", ["Google", "Facebook", "LinkedIn", "Newsletter"])
     medium = st.selectbox("Medio (utm_medium)", ["CPC", "Display", "Email", "Social"])
 
-    # Campos dependientes y manuales para UTMs
-    campaign_utm = st.text_input("Campaña (utm_campaign, introduce el valor manualmente)", campaign_nomenclature, help="Este campo es manual, puedes ajustar el nombre de la campaña.")
-    content_utm = st.text_input("Contenido (utm_content, introduce el valor manualmente)", ad_nomenclature, help="Este campo es manual, ajusta según el contenido del anuncio.")
-    term_utm = st.text_input("Término (utm_term, introduce el valor manualmente)", group_nomenclature, help="Este campo es manual, ajusta según el término relacionado al grupo de anuncios.")
+    # Lógica para mostrar valores heredados o permitir edición
+    if campaign_nomenclature:
+        campaign_utm = st.text_input(
+            "Campaña (utm_campaign)",
+            campaign_nomenclature,
+            help="Este campo ya contiene la campaña heredada, pero puedes ajustarlo si es necesario."
+        )
+    else:
+        campaign_utm = st.text_input(
+            "Campaña (utm_campaign)",
+            "",
+            help="Introduce el nombre de la campaña si no se hereda de los niveles anteriores."
+        )
 
-    # Generar URL con nomenclatura para UTMs
+    if group_nomenclature:
+        term_utm = st.text_input(
+            "Término (utm_term)",
+            group_nomenclature,
+            help="Este campo ya contiene el término heredado, pero puedes ajustarlo si es necesario."
+        )
+    else:
+        term_utm = st.text_input(
+            "Término (utm_term)",
+            "",
+            help="Introduce el término relacionado al grupo de anuncios si no se hereda de los niveles anteriores."
+        )
+
+    if ad_nomenclature:
+        content_utm = st.text_input(
+            "Contenido (utm_content)",
+            ad_nomenclature,
+            help="Este campo ya contiene el contenido heredado, pero puedes ajustarlo si es necesario."
+        )
+    else:
+        content_utm = st.text_input(
+            "Contenido (utm_content)",
+            "",
+            help="Introduce el contenido relacionado al anuncio si no se hereda de los niveles anteriores."
+        )
+
+    # Construir los parámetros UTM
     utm_parts = [
         f"utm_source={source}",
         f"utm_medium={medium}",
@@ -614,7 +614,7 @@ def nivel_utms(campaign_nomenclature, group_nomenclature, ad_nomenclature):
         utm_parts.append(f"utm_term={term_utm}")
 
     # Validar si todos los campos obligatorios tienen valores válidos
-    if base_url.startswith("http") and all(utm_parts):
+    if base_url.startswith("http") and campaign_utm:
         utm_nomenclature = f"{base_url}?{'&'.join(utm_parts)}"
     else:
         utm_nomenclature = ""  # Mostrar vacío si falta algún campo obligatorio
@@ -660,8 +660,9 @@ def nivel_utms(campaign_nomenclature, group_nomenclature, ad_nomenclature):
     """
     st.components.v1.html(copy_button_code)
 
+    return utm_nomenclature
 
-    return utm_nomenclature   
+
 
 
 
@@ -695,17 +696,23 @@ def acerca_de():
     st.write("""
     **¡Hola, encantado de saludarte!**
 
-    Soy Jordi Quiroga, un profesional apasionado del marketing digital y la ciencia de datos. Con 15 años de experiencia en la industria del marketing, he trabajado con agencias y marcas para optimizar sus estrategias publicitarias a través del poder de los datos.
+    Soy Jordi Quiroga, 
+    analista de datos, especialista en integración de fuentes y científico de datos en proyecto. 
 
-    He creado esta aplicación con el objetivo de ayudar a los profesionales del marketing a estructurar mejor sus campañas y aprovechar al máximo los recursos publicitarios.
-    Mi enfoque siempre ha sido hacer accesible y comprensible la información, utilizando herramientas tecnológicas para transformar datos dispersos en insights accionables.
+    Llevo más de 15 años ayudando a agencias y profesionales del marketing a transformar sus datos en insights accionables.
     
-    Me encanta la tecnología, el aprendizaje automático y explorar nuevas formas de hacer que el marketing basado en datos sea más eficiente y fácil para todos.
+    He creado esta herramienta para solucionar uno de los problemas más frustrantes que encuentro en el día a día con mis clientes: la falta de consistencia en las nomenclaturas.
+   
+    Esta situación, que muchas veces pasa desapercibida, siempre lleva a un escenario de error seguro cuando se quieren integrar las fuentes para hacer un buen análisis y una gestión eficiente de las campañas.
+    
+    Esta aplicación pretende ayudar a los profesionales del marketing y a sus equipos a dar el primer paso hacia la automatización de procesos mediante la adquisición de buenas prácticas tecnológicas que brillan por su eficiencia y notable ahorro de tiempo y recursos.
+    
+    Estás ante una prueba de concepto. La herramienta la sigo mejorando día a día con tus comentarios. Si quieres dejarme feedback o que personalice esta aplicación para tí, puedes hacerlo a través de esta dirección: **jordi@jordiquiroga.com**
 
-    Si deseas saber más sobre mi trabajo, o quieres que personalice esta aplicación para ti, ¡no dudes en ponerte en contacto!
+    Puedes descubrir más sobre mi en mi sitio web y en mi perfil de linkedin
                  
     """)
-    st.write("**Correo electrónico:** ads@jordiquiroga.com")
+    st.write("**Sitio web:** https://www.jordiquiroga.com")
     st.write("**Perfil de LinkedIn:** [Jordi Quiroga Fernández](https://www.linkedin.com/in/jordiquirogafernandez/)")
     st.image("images/Jordi-portrait.jpg", caption="Jordi Quiroga", width=200)
 
