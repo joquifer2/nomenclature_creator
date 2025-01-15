@@ -4,35 +4,6 @@ from io import BytesIO
 from collections import OrderedDict
 
 
-def check_password():
-    """Función que pide al usuario la contraseña y la valida.
-       Retorna True si es correcta, False si no."""
-    
-    if "password_correct" not in st.session_state:
-        st.session_state["password_correct"] = False
-
-    # Solo mostramos el formulario si no está autenticado
-    if not st.session_state["password_correct"]:
-        st.subheader("Por favor, ingresa la clave para acceder")
-        
-        pwd_input = st.text_input("Contraseña:", type="password")
-        if st.button("Enviar"):
-            SECRET_PASSWORD = "1234"  # <-- O usa st.secrets["password"]
-            
-            if pwd_input == SECRET_PASSWORD:
-                st.session_state["password_correct"] = True
-                st.success("Contraseña correcta. ¡Bienvenido!")
-                # Al poner st.experimental_rerun(), se volverá a dibujar la app
-                st.experimental_rerun()
-            else:
-                st.error("Contraseña incorrecta. Inténtalo de nuevo.")
-                st.stop()  # Evitamos que se ejecute el resto de la app
-
-    # Si ya está autenticado, simplemente retornamos True
-    return st.session_state["password_correct"]
-
-
-
 # ======================================
 # FUNCIÓN PARA RESETEAR CAMPOS
 # ======================================
@@ -61,9 +32,7 @@ def capitalize_first_letter(text):  # <-- Nuevo
 # FUNCIÓN PRINCIPAL (MAIN)
 # ======================================
 def main():
-# 1) VERIFICAR CONTRASEÑA
-    if not check_password():
-        st.stop()  # Si la contraseña no es correcta, paramos la ejecución aquí mismo.
+
     # ======================================================
     # INICIALIZACIÓN DE LISTAS PARA ALMACENAR MÚLTIPLES ITEMS
     # ======================================================
@@ -857,6 +826,12 @@ def acerca_de():
     **Sitio web:** https://www.jordiquiroga.com  
     **Perfil de LinkedIn:** [Jordi Quiroga Fernández](https://www.linkedin.com/in/jordiquirogafernandez/) 
     """)
+
+    st.image(
+        "images/Jordi-portrait.jpg", 
+        caption="Jordi Quiroga", 
+        width=150  # Ajusta el ancho a tu gusto
+    )
 
 # ======================================
 # EJECUCIÓN DEL MAIN
