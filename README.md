@@ -1,50 +1,133 @@
-***Generador de Nomenclaturas para Campañas de Marketing***
+Generador de Nomenclaturas Publicitarias (Multi-Nomenclaturas)
 
-**Descripción General**
+Descripción General
 
-Esta aplicación está diseñada para ayudar a los profesionales y agencias de marketing a estandarizar las nomenclaturas de sus campañas. Proporciona un enfoque sistemático para nombrar campañas, grupos de anuncios, anuncios y UTMs, facilitando la creación de una nomenclatura consistente y estructurada en diferentes plataformas publicitarias.
+Esta aplicación está diseñada para ayudar a profesionales del marketing a crear nomenclaturas publicitarias estructuradas y consistentes. Su principal propósito es simplificar la creación y gestión de nomenclaturas para campañas, grupos de anuncios, anuncios individuales y UTMs, asegurando la coherencia en la organización de datos publicitarios.
 
-La aplicación está desarrollada con **Streamlit**.
+Objetivos
 
+Unificar nombres en distintas plataformas publicitarias.
 
-**Características Clave**
+Simplificar el proceso de creación de nomenclaturas personalizadas.
 
-* Generador de Nomenclatura de Campañas: Configura y genera convenciones de nombres para campañas, grupos de anuncios, anuncios y UTMs.
+Permitir exportaciones de nomenclaturas en formato Excel.
 
-* Flujo de Trabajo Paso a Paso: La aplicación guía a los usuarios a través de diferentes niveles: Campañas, Grupos de Anuncios, Anuncios y UTMs.
+Facilitar el análisis de datos mediante una estructura coherente.
 
-* Campos Personalizados: Añade campos personalizados para describir mejor las campañas y anuncios, garantizando flexibilidad.
+Funcionalidades Principales
 
-* Exportación a Excel: Exporta las nomenclaturas generadas en un formato estructurado de Excel.
+1. Flujo paso a paso
 
-* Interfaz Intuitiva: Fácil de usar, con una barra lateral que te guía a través de cada etapa del proceso de nombrado.
+Configuración por niveles:
 
-* Funcionalidad de Copiado: Copia rápidamente la nomenclatura y los UTMs generados con un solo clic.
-  
+Campañas
 
-**Cómo Usar**
+Grupos de Anuncios
 
-*Paso 1: Configuración de Campaña*
+Anuncios
 
-Configura los detalles principales de tu campaña de marketing, como la plataforma, el formato del anuncio y la geografía.
+UTMs
 
-*Paso 2: Grupos de Anuncios*
+Guarda las configuraciones como listas de nomenclaturas.
 
-Configura los grupos de anuncios, incluyendo la segmentación y los temas creativos.
+2. Flexibilidad en campos personalizados
 
-*Paso 3: Anuncios*
+Añade campos personalizados en cada nivel.
 
-Define los detalles de los anuncios individuales, como el tipo de creativo y la variante.
+Elige entre dos estructuras de nomenclaturas:
 
-*Paso 4: Generar UTMs*
+Clásica (separada por guiones bajos _).
 
-Crea parámetros UTM consistentes para el seguimiento de tus campañas.
+Con corchetes [valor]-[valor].
 
-*Paso 5: Exportar*
+3. Exportación a Excel
 
-Exporta todas las nomenclaturas generadas a Excel para compartir y referenciar fácilmente.
+Descarga todas las nomenclaturas guardadas en un archivo Excel.
 
+Cada nivel se almacena en una hoja diferente del archivo.
 
-**Problemas**
+4. Persistencia de datos en sesión
 
-Si encuentras algún problema o tienes sugerencias de mejora, no dudes en crear un issue en este repositorio.
+Utiliza st.session_state para guardar los datos temporalmente.
+
+5. Diseño modular
+
+La app está organizada en niveles.
+
+Incluye una sección "Acerca de" con información del autor.
+
+Funciones del Código
+
+1. reset_session_state(keys)
+
+Propósito: Restablece los valores de los campos en la sesión.
+
+Uso: Borra claves especificadas para restablecer valores iniciales.
+
+2. main()
+
+Propósito: Controla el flujo de navegación entre niveles.
+
+Uso: Inicializa listas en st.session_state y muestra el menú lateral.
+
+3. pantalla_inicio()
+
+Propósito: Muestra introducción y guía de uso.
+
+Uso: Explica el flujo de trabajo y proporciona un video tutorial.
+
+4. nivel_campanas()
+
+Propósito: Configura campañas publicitarias.
+
+Uso: Selecciona plataforma, red publicitaria, geografía, etc. Guarda en st.session_state['campaign_data_list'].
+
+5. nivel_grupos_anuncios()
+
+Propósito: Configura grupos de anuncios.
+
+Uso: Añade segmentación, formato y campos personalizados. Guarda en st.session_state['group_data_list'].
+
+6. nivel_anuncios()
+
+Propósito: Configura anuncios individuales.
+
+Uso: Define tipo de creativo, variantes A/B y campos personalizados. Guarda en st.session_state['ad_data_list'].
+
+7. nivel_utms()
+
+Propósito: Crea URLs con parámetros UTM.
+
+Uso: Genera URLs rastreables para seguimiento. Guarda en st.session_state['utm_data_list'].
+
+8. reorder_dicts(list_of_dicts)
+
+Propósito: Reordena claves de diccionarios para garantizar formato consistente.
+
+Uso: Asegura que la columna "Nomenclatura generada" quede al final.
+
+9. exportar_nomenclaturas()
+
+Propósito: Exporta todas las nomenclaturas a Excel.
+
+Uso: Divide niveles en hojas separadas y permite vista previa antes de la descarga.
+
+10. acerca_de()
+
+Propósito: Proporciona información sobre el autor.
+
+Uso: Incluye enlaces al sitio web y LinkedIn.
+
+Conclusión
+
+La aplicación está optimizada para la gestión de nomenclaturas publicitarias, proporcionando un flujo de trabajo estructurado para crear nombres consistentes a nivel de campañas, grupos de anuncios, anuncios individuales y UTMs. Es altamente personalizable y facilita la exportación de datos en Excel para análisis adicionales.
+
+Información del Autor
+
+Nombre: Jordi Quiroga
+
+Correo Electrónico: jordi@jordiquiroga.com
+
+Sitio Web: jordiquiroga.com
+
+LinkedIn: Jordi Quiroga Fernández
