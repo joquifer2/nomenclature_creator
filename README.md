@@ -50,7 +50,7 @@ La aplicación está desarrollada con **Streamlit** y es completamente interacti
 
 ## 📁 Estructura del Proyecto
 
-```bash
+```
 nomenclaturas_streamlit/
 │
 ├── app.py                  # Archivo principal de la aplicación
@@ -58,6 +58,7 @@ nomenclaturas_streamlit/
 ├── requirements.txt        # Lista de dependencias del proyecto
 ├── README.md               # Documentación del proyecto
 └── ...
+```
 
 ## 🧪 Estado del Proyecto
 
