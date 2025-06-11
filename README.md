@@ -1,4 +1,4 @@
-# Generador de Nomenclaturas para Campañas de Marketing
+o# Generador de Nomenclaturas para Campañas de Marketing
 
 > **Una herramienta diseñada para ayudar a agencias y profesionales del marketing a crear nomenclaturas estructuradas, consistentes y exportables para campañas, anuncios y UTMs.**
 
@@ -90,9 +90,5 @@ Tu feedback es esencial para seguir mejorando esta herramienta.
 
 Este proyecto se encuentra bajo desarrollo personal y no tiene una licencia específica asignada aún.  
 Para usos personalizados o colaboraciones, contacta directamente con el autor.
-
-nomenclatura consistente y estructurada en diferentes plataformas publicitarias.
-
-La aplicación está desarrollada con **Streamlit**.
 
 Puedes verlo aquí: https://nomenclaturecreatorv3.streamlit.app/
